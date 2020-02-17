@@ -45,7 +45,19 @@ The view consists of:
 
 Note:
 - Every project in the list is not editable, but it is deletable.
-![SellerApp](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/sellerpage.png)
+
+Seller Page Create Project
+![SellerApp_CreateProject](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/sellerpage_create_project.png)
+
+Seller Page Delete Project
+![SellerApp_DeleteProject](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/sellerpage_delete_project.png)
+
+Seller Page Form Validation
+![SellerApp_FormValidation](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/sellerpage_form_validation.png)
+
+Seller Page Location Tracking - for easy input via browser
+![SellerApp_LocationTracking](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/sellerpage_location_tracking.png)
+
 
 ### Buyer Page
 The Buyer view follows below properties:
@@ -63,7 +75,19 @@ would only have to buy 100kWh of the available 500kWh.
 - If there is not available energy nearby to satisfy the query, the user sees a list of all
 the energy they can purchase, and receive a message detailing how much energy they
 would still need to find.
-![BuyerApp](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/buyerpage.png)
+
+Buyer Page Filtered Results - based on search criteria
+![BuyerApp_FilteredResults](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/buyerpage_filtered_results.png)
+
+Buyer Page All Results - when no criteria matches search query
+![BuyerApp_AllResults](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/buyerpage_all_results.png)
+
+Buyer Page Form Validation
+![BuyerApp_FormValidation](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/buyerpage_form_validation.png)
+
+Buyer Page Location Tracking - for easy input via browser
+![BuyerApp_LocationTracking](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/buyerpage_location_tracking.png)
+
 
 ### Database
 ![MongoDb](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/mongodb.png)
