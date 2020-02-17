@@ -28,11 +28,11 @@
         <div class="form-row">
             <div class="col-md-6 mb-3">
                 <label for="latitude">Latitude</label>
-                <input type="number" class="form-control" name="latitude" id="latitude" placeholder="Latitude">
+                <input type="number" class="form-control" name="latitude" id="latitude" placeholder="Latitude" value="" required>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="longitude">Longitude</label>
-                <input type="number" class="form-control" name="longitude" id="longitude" placeholder="Longitude">
+                <input type="number" class="form-control" name="longitude" id="longitude" placeholder="Longitude" value="" required>
             </div>
             <div class="col-md-12 mb-3">
                 <button class="btn btn-info" type="button" onclick="getLocation()">Get Position</button>
@@ -55,9 +55,9 @@
     </form>
 </div>
 <div class="col-md-12 mb-3">
-    <form id="search_results_div">
+    <form id="search_results_div" hidden>
         <h1>Search Results</h1>
-        <table class="table table-hover" id="search_results">
+        <table class="table table-hover" id="results_table">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -70,19 +70,8 @@
                 <th scope="col">Purchase</th>
             </tr>
             </thead>
-            <tbody>
-            {% for listing in listings %}
-            <tr>
-                <th scope="row">{{ listing.id }}</th>
-                <th scope="row">{{ listing.name }}</th>
-                <th scope="row">{{ listing.latitude }}</th>
-                <th scope="row">{{ listing.longitude }}</th>
-                <th scope="row">{{ listing.amount }}</th>
-                <th scope="row">{{ listing.distance }}</th>
-                <th scope="row">{{ listing.price }}</th>
-                <th scope="row"><a href="#"><span id="Id: {{ listing.id }}, Project: {{ listing.name }}" class="glyphicon glyphicon-shopping-cart" style="color: deepskyblue" onclick="purchase(this.id);"></span></a></th>
-            </tr>
-            {% endfor %}
+            <tbody id="table_data">
+
             </tbody>
         </table>
     </form>
@@ -90,7 +79,6 @@
 </body>
 
 <script type="text/javascript">
-    $('#search_results_div').hide();
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie != '') {
@@ -114,33 +102,43 @@
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                var csrftoken = getCookie('csrftoken');
+                const csrftoken = getCookie('csrftoken');
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         }
     });
 
     $('#submit').on("click", function (e) {
-        var longitude = $('#longitude').val();
-        var latitude = $('#latitude').val();
-        var amount = $('#amount').val();
-        var within = $('#within').val();
-        var data = {'longitude': longitude, 'latitude': latitude, 'amount': amount};
-        $.ajax({
-            method: "GET",
-            url: "{% url 'buyer-page' %}?longitude="+longitude+"&latitude="+latitude+"&amount="+amount+"&create_listing=true&within="+within,
-            contentType: "application/json",
-            data: data,
-        })
-        .always(function(result, xhr) {
-            $('#search_results_div').show();
-            if (!xhr.hasOwnProperty('error')) {
-                $('#search_results').load(location.href+" #search_results");
-                e.preventDefault();
-            } else {
-                alert(xhr.error);
-            }
-        });
+        e.preventDefault();
+        var latitude = $('#latitude');
+        var longitude = $('#longitude');
+        var amount = $('#amount');
+        var within = $('#within');
+        if (verify_required_fields(latitude, longitude, amount, within)) {
+            $.ajax({
+                method: "POST",
+                url: "{% url 'buyer-page' %}?longitude=" + longitude.val() + "&latitude=" + latitude.val() + "&amount=" + amount.val() + "&create_listing=true&within=" + within.val(),
+                contentType: "application/json",
+                // data: data,
+            })
+            .always(function (result, xhr) {
+                $('#search_results_div').show();
+                if (!xhr.hasOwnProperty('error')) {
+                    var table_data = $('#table_data');
+                    table_data.empty();
+                    var listings = result['listings'];
+                    var rows = [];
+                    for (var i in listings) {
+                        rows.push("<tr><th scope='row'>" + listings[i]['id'] + "</th><th scope='row'>" + listings[i]['name'] + "</th><th scope='row'>" + listings[i]['latitude'] + "</th><th scope='row'>" + listings[i]['longitude'] + "</th><th scope='row'>" + listings[i]['amount'] + "</th><th scope='row'>" + listings[i]['distance'] + "</th><th scope='row'>" + listings[i]['price'] + "</th><th scope='row'><a href='#'><span id='Id: " + listings[i]['id'] + ", Project: " + listings[i]['name'] + "' class='glyphicon glyphicon-shopping-cart' style='color: deepskyblue' onclick='purchase(this.id);'></span></a></th></tr>");
+                    }
+                    rows = rows.join('\n');
+                    console.log(rows);
+                    table_data.html(rows);
+                } else {
+                    alert(xhr.error);
+                }
+            });
+        }
     });
 
     function getLocation() {
@@ -164,5 +162,35 @@
     function purchase(document_id) {
         alert(document_id+" added to cart!")
     }
+
+    function verify_required_fields(latitude, longitude, amount, within){
+        if (!latitude.val() || !longitude.val() || !amount.val() || !within.val()) {
+            if (!latitude.val()) {
+                latitude.addClass('empty');
+            }
+            if (!longitude.val()) {
+                longitude.addClass('empty');
+            }
+            else if (!amount.val()) {
+                amount.addClass('empty');
+            }
+            if (!within.val()) {
+                within.addClass('empty');
+            }
+            return false
+        }
+        else{
+            latitude.removeClass('empty');
+            longitude.removeClass('empty');
+            amount.removeClass('empty');
+            within.removeClass('empty');
+            return true;
+        }
+    }
 </script>
+<style>
+    .empty {
+        border: 1px solid red;
+    }
+</style>
 </html>

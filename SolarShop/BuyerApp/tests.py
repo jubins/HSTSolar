@@ -3,7 +3,7 @@ from django.test import TestCase
 
 class BuyerAppTestCases(object):
     def test_distance_is_getting_calculated_correctly(self):
-        pass
+        print('Here')
 
     def test_results_are_getting_sorted_by_price(self):
         pass
@@ -13,5 +13,5 @@ class BuyerAppTestCases(object):
 
     def test_distance_filter(self):
         pass
-    
+
 
