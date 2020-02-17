@@ -33,34 +33,34 @@ This is the first page you will see when you start the project
 ![Dashboard](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/homepage.png)
 
 ### Seller Page
-The seller page follows these properties
-1. a name
-2. a location (latitude/longitude)
-3. an amount of energy to sell (kWh)
-4. a price for the energy ($/kWh)
+The seller page follows these properties:
+1. A name
+2. A location (latitude/longitude)
+3. An amount of energy to sell (kWh)
+4. A price for the energy ($/kWh)
 
 The view consists of:
-1. an interface where the user can input the above properties to create a new project
-2. a list of projects that user has created
+1. An interface where the user can input the above properties to create a new project
+2. A list of projects that user has created
 
 Note:
-- Every project in the list is not editable, but it is deletable
+- Every project in the list is not editable, but it is deletable.
 ![SellerApp](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/sellerpage.png)
 
 ### Buyer Page
 The Buyer view follows below properties:
-1. A set of inputs that will allow the user to enter a location (latitude/longitude) and an amount
-of energy (kWh)
+1. A set of inputs that allows the user to enter a location (latitude/longitude) and an amount
+of energy (kWh).
 2. A list (returned by the above query) of project names, the amount of energy purchased from
 each project (kWh), and the amount of money spent on that energy ($).
 
 Note:
 - The user wants to pay as little as possible for the inputted energy, so I have sorted the energy by price in ascending order to the price is shown from lowest to highest.
-- The projects that the query returns must be within 500km of the requested location, I have made this option configurable in the input with 500km as default value.
+- The projects that the query returns are within 500km of the requested location, I have made this option configurable in the input with 500km as default value.
 - A user does not have to purchase all of the energy provided by a project. For example, if the
 user requests 100kWh, and the only project within 500km is selling 500kWh, then the user
 would only have to buy 100kWh of the available 500kWh.
-- If there is not available energy nearby to satisfy the query, the user should see a list of all
+- If there is not available energy nearby to satisfy the query, the user sees a list of all
 the energy they can purchase, and receive a message detailing how much energy they
 would still need to find.
 ![BuyerApp](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/buyerpage.png)
