@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified jQuery -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Listings</title>
+</head>
+<body>
+<div class="col-md-12 mb-3">
+    <div class="text-center">
+        <p style="font-size: 50px">Seller Page</p>
+        <a id="home" class="btn btn-warning" role="button" type="submit" href="{% url 'dashboard' %}">Back to Homepage</a>
+    </div>
+    <h1>New Listing</h1>
+    <form>
+        <div class="form-row">
+            <div class="col-md-12 mb-3">
+                <label for="plant_name">Project name</label>
+                <input type="text" class="form-control" name="plant_name" id="plant_name" placeholder="Plant name" value="Bright Solar Plant" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
+                <label for="latitude">Latitude</label>
+                <input type="number" class="form-control" name="latitude" id="latitude" placeholder="Latitude">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="longitude">Longitude</label>
+                <input type="number" class="form-control" name="longitude" id="longitude" placeholder="Longitude">
+            </div>
+            <div class="col-md-12 mb-3">
+                <button class="btn btn-info" type="button" onclick="getLocation()">Get Position</button>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="amount">Amount (kWh)</label>
+                <input type="number" class="form-control" name="amount" id="amount" placeholder="Amount" value="10" required>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="price">Price ($/kWh)</label>
+                <input type="number" class="form-control" name="price" id="price" placeholder="Price" value="150" required>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <form>
+                {% csrf_token %}
+                <button id="submit" class="btn btn-primary" type="submit" value="ok">Submit Listing</button>
+            </form>
+        </div>
+    </form>
+    </div>
+    <div class="col-md-12 mb-3">
+        <form>
+        <h1>Created Listings</h1>
+        <table class="table table-hover" id="created_listings">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Project Name</th>
+                    <th scope="col">Latitude</th>
+                    <th scope="col">Longitude</th>
+                    <th scope="col">Amount (kWh)</th>
+                    <th scope="col">Price ($/kWh)</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for listing in listings %}
+                    <tr>
+                        <th scope="row">{{ listing.id }}</th>
+                        <th scope="row">{{ listing.name }}</th>
+                        <th scope="row">{{ listing.latitude }}</th>
+                        <th scope="row">{{ listing.longitude }}</th>
+                        <th scope="row">{{ listing.amount }}</th>
+                        <th scope="row">{{ listing.price }}</th>
+                        <th scope="row"><a href="#"><span id="delete_{{ listing.id }}" class="glyphicon glyphicon-trash" style="color: red" onclick="delete_document(this.id);"></span></a></th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </form>
+    </div>
+</body>
+
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                var csrftoken = getCookie('csrftoken');
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $('#submit').on("click", function(e) {
+        e.preventDefault();
+        var plant_name = $('#plant_name').val();
+        var longitude = $('#longitude').val();
+        var latitude = $('#latitude').val();
+        var amount = $('#amount').val();
+        var price =  $('#price').val();
+        var data = {'project_name': plant_name, 'longitude': longitude, 'latitude': latitude,
+                    'amount': amount, 'price': price};
+        $.ajax({
+            method: "POST",
+            url: "{% url 'seller-page' %}?project_name="+plant_name+"&longitude="+longitude+"&latitude="+latitude+"&amount="+amount+"&price="+price+"&create_listing=true",
+            contentType: "application/json",
+            // data: data,
+        })
+        .always(function(xhr) {
+            if (!xhr.hasOwnProperty('error')) {
+                $('#created_listings').load(location.href+" #created_listings");
+            } else {
+                alert(xhr.error);
+            }
+        });
+    });
+
+    function delete_document(document_id) {
+        $.ajax({
+            method: "POST",
+            url: "{% url 'seller-page' %}?document_id="+document_id+"&delete_listing=true",
+            contentType: "application/json",
+            // data: data,
+        })
+        .always(function(xhr) {
+            if (!xhr.hasOwnProperty('error')) {
+                $('#created_listings').load(location.href+" #created_listings");
+            } else {
+                alert(xhr.error);
+            }
+        });
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            var latitude = document.getElementById("latitude");
+            var longitude = document.getElementById("longitude");
+            latitude.value = 37.7847372;
+            longitude.value = -122.3941619;
+        }
+    }
+
+    function showPosition(position) {
+        var latitude = document.getElementById("latitude");
+        var longitude = document.getElementById("longitude");
+        latitude.value = position.coords.latitude;
+        longitude.value = position.coords.longitude;
+    }
+</script>
+</html>
