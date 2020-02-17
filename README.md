@@ -65,3 +65,5 @@ the energy they can purchase, and receive a message detailing how much energy th
 would still need to find.
 ![BuyerApp](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/buyerpage.png)
 
+### Database
+![MongoDb](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/mongodb.png)
