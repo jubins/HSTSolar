@@ -44,7 +44,7 @@ The view consists of:
 2. a list of projects that user has created
 
 Note:
-- Every project in the list does not have to be editable, but it must be deletable
+- Every project in the list is not editable, but it is deletable
 ![SellerApp](https://raw.githubusercontent.com/jubins/HSTSolar/master/images/sellerpage.png)
 
 ### Buyer Page
