@@ -1,5 +1,5 @@
-# Solar Shop App
-This solar shop app has been created using Python Django web framework as backend, MongoDB as database and HTML, CSS, Bootstrap and jQuery for the fronend.
+# Client Matching App
+This app has been created using Python Django web framework as backend, MongoDB as database and HTML, CSS, Bootstrap and jQuery for the fronend.
 In this app I have created two interfaces:
 1. A view where a seller can create a list of energy (kWhs) to sell from projects, and
 2. A view where a buyer can input a location and desired quantity of energy, and will be given a
