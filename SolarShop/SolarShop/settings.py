@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from configparser import ConfigParser
+import django_heroku
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -92,9 +96,12 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': db.get('db_name'),
         'HOST': db.get('host'),
-        'PORT': db.getint('port')
+        'PORT': db.getint('port'),
+        'USER': db.get('username'),
+        'PASSWORD': db.get('password'),
     }
 }
+
 
 
 # Password validation

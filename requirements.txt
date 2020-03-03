@@ -3,3 +3,9 @@ djongo >= 1.3
 
 # Numpy
 numpy == 1.18.1
+
+# Heroku
+django-heroku
+
+# Gunicorn
+gunicorn
