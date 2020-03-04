@@ -1,1 +1,1 @@
-web: gunicorn SolarShop.wsgi --log-file -
+web: gunicorn SolarShop.wsgi
