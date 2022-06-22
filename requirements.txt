@@ -2,7 +2,7 @@
 djongo >= 1.3
 
 # Numpy
-numpy == 1.18.1
+numpy == 1.22.0
 
 # Heroku
 django-heroku
